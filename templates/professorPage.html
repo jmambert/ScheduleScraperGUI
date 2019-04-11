@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2> Add Office Hours </h2>
+
+<form action='javascript:void(0);' method="POST"><br> 
+	<table id="hours">
+		<tr><td>Season: </td><td><select name="season">
+					<option value="Spring">Spring</option>
+					<option value="Fall">Fall</option>
+					<option value="Summer">Summer</option>
+					<option value="Winter">Winter</option>
+				</select></td></tr>
+		<tr><td>Year: </td><td><input type="text" name="year"></td></tr>
+		<tr><td>Professor First Name: </td><td><input type="text" name="firstname"></td></tr>
+		<tr><td>Professor Last Name: </td><td><input type="text" name="lastname"></td></tr>
+		<tr><td>Office Location: </td><td><input type="text" name="officeLocation"></td></tr>
+		<tr><td>Phone number: </td><td><input type="text" name="phoneNumber"></td></tr>
+		<tr><td>Email: </td><td><input type="text" name="email"></td></tr>
+
+	</table>
+
+	<div class="add">Add Office Hours</div><br>
+<button onclick="officeHoursSubmit(this.form)">Submit</button>
+</form>
+
+{% endblock %}
+{% block script %}
+
+<script type="text/javascript">
+
+	var counter = 0;
+
+$(document).on('click', ".add", function() {
+		console.log("in add");
+		    var hoursHtml = `
+		<td><label>Time: </label></td><td><input type="text" name="time${counter}"></td>
+		<td><label> Day: </label></td><td><select id="dynamic-select" name="day${counter}">
+			        <option value="Monday">Monday</option>
+		                <option value="Tuesday">Tuesday</option>
+		                <option value="Wednesday">Wednesday</option>
+		                <option value="Thursday">Thursday</option>
+		                <option value="Friday">Friday</option>                                                          </select>
+		        <span class="remove">Remove</span></td>
+		        `;
+		  var tr = document.createElement("tr");
+		  var table = document.getElementById('hours');
+		  tr.innerHTML = hoursHtml;
+		  table.append(tr);
+	counter++;
+		  return false;
+});
+
+$(document).on('click', ".remove", function() {
+	console.log("in remove");
+	  $(this).closest('tr').remove();
+});
+
+function officeHoursSubmit(form) {
+	$("body").css("cursor", "progress");
+	var data ={}; //-makes dictionary
+	for (var i = 0; i < form.length-1; i++) {
+	    var name = form.elements[i].name; //sets equal to
+	    data[name] = form.elements[i].value;
+	}
+	$.post('/submit', {data:JSON.stringify({info:data})}).done(function(response) {
+		$("body").css("cursor", "default");
+		alert(response);	
+	});
+}
+
+</script>
+
+{% endblock %}
+

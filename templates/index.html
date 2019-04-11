@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1> Welcome Jeanne! </h1><br>
+
+<h3> It's a great day to be an eagle! </h3><br><br>
+
+<body>
+	<p id="demo" onclick="myFunction()"></>
+	<a href="/semesterSchedule">Click here to run the scraper</a>
+
+	<script>
+		function myFunction() {
+			document.getElementById("demo").innerHTML = "Loading...";
+		}
+	</script>
+</body>
+
+{% autoescape off %} {{ professorName }} {% endautoescape %}
+
+{% endblock %}
+
