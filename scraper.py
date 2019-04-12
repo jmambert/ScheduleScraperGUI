@@ -90,9 +90,9 @@ def infoFunction():
             classes_data.append(row2)
 
         # otherwise we only save single line
-    else:
-        row = [instructor, course + '-' + section, time + f'({days})', room]
-        classes_data.append(row)
+        else:
+            row = [instructor, course + '-' + section, time + f'({days})', room]
+            classes_data.append(row)
 
     all_classes_data = classes_data
 
@@ -126,7 +126,7 @@ def infoFunction():
 
     writer.save()
 
-    return all_classes_data
+    return classes_data
 
 def grabData():
     # set data that necessary for request
