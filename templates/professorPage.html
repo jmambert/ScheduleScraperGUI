@@ -21,7 +21,7 @@
 
 	</table>
 
-	<div class="add">Add Office Hours</div><br>
+	<button class="add">Add Office Hours</button><br>
 <button onclick="officeHoursSubmit(this.form)">Submit</button>
 </form>
 
@@ -42,7 +42,7 @@ $(document).on('click', ".add", function() {
 		                <option value="Wednesday">Wednesday</option>
 		                <option value="Thursday">Thursday</option>
 		                <option value="Friday">Friday</option>                                                          </select>
-		        <span class="remove">Remove</span></td>
+		        <button class="remove">Remove</button></td>
 		        `;
 		  var tr = document.createElement("tr");
 		  var table = document.getElementById('hours');

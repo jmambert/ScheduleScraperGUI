@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block login %}
+
+	<form method='POST'>
+	<h2> Schedule Scraper Login Page </h2>
+		Username: <input type="text" name='Username' required>
+		<p>
+		Password: <input type="password" name='Password' required><p>
+		<input type="Submit" name="submit" value="Login">
+	</form>
+
+	{% if alertmessage %}
+	<script>
+		(function () {
+			alert("{{alertmesage}}");
+		})();
+	</script>
+	{% endif %}
+
+{% endblock %}

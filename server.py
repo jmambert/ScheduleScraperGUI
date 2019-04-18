@@ -1,7 +1,8 @@
 import os
 import json
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_bootstrap import Bootstrap
+from flask_login import current_user, login_user, LoginManager, UserMixin, logout_user, login_required
 from scraper import infoFunction, grabData
 import pandas
 from openpyxl import load_workbook
@@ -10,16 +11,69 @@ from docx import Document
 app = Flask(__name__)
 app.secret_key = os.urandom(24).hex()
 
+login_manager = LoginManager()
+login_manager.session_protection = "strong"
+login_manager.init_app(app)
+login_manager.login_view= "login"
+
+J_USERNAME = 'jcampbell'
+J_PASSWORD = 'sudoUser'
+
+class User(UserMixin):
+    username = None
+    authenticated = False
+
+    def __init__(self, username):
+        self.username = username
+        self.authenticated = True
+
+    def is_active(self):
+         return True
+
+    def get_id(self):
+        return self.username
+
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_anonymous(self):
+        return False
+
+@login_manager.user_loader
+def loader_user(username):
+    user = User(username)
+    return user
+
+@app.route("/login", methods=["GET","POST"])
+def login():
+    if request.method == "POST" and "Username" in request.form:
+        print("PrintStatement\n")
+        if request.form['Username'] == J_USERNAME and request.form['Password'] == J_PASSWORD:
+            logged_user = User(request.form['Username'])
+            login_user(logged_user, remember=False)
+            print("PrintStatement0\n")
+            return redirect(url_for("index"))
+        else:
+            print("I'm different!")
+            alertMessage = "Login Failed"
+        #except Exception as e:
+        print("a little bit more different than the other ones")
+        alertMessage = "Login Failed"
+        return render_template('login.html',login=True,alertmessage = alertMessage)
+    return render_template('login.html',login=True) 
+
 @app.route('/')
-#login_required
+@login_required
 def index():
     return render_template('index.html')
 
 @app.route('/professorAddOfficeHours')
+@login_required
 def professorPage():
     return render_template('professorPage.html')
 
 @app.route('/semesterSchedule')
+@login_required
 def semesterSchedule():
     data = infoFunction()
     print(data)
@@ -30,6 +84,7 @@ def semesterSchedule():
     return render_template('semesterSchedule.html', professorName = data)
 
 @app.route('/submit', methods=['POST'])
+@login_required
 def submit():
     scrapedData = grabData()
     data = json.loads(request.form['data'])
